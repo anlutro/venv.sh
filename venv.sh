@@ -225,7 +225,10 @@ function venv {
     }
 
     function venv-destroy {
-        venv-locate || echo "No virtualenv found!" && return 0
+        if ! venv-locate; then
+            echo "No virtualenv found!"
+            return 0
+        fi
         venv="$venv_found"
 
         if ! confirm "Remove virtualenv '$venv'?"; then
