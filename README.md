@@ -42,3 +42,7 @@ This script exists for a few reasons, and I wasn't happy with existing solutions
 - I didn't want to specify the exact Python version to create a virtualenv with, I want to default to the latest installed on my system.
 - When creating a virtualenv, I always want pip and setuptools to be upgraded to the latest version.
 - When creating a virtualenv, I want the option to conveniently install setup.py or dev-requirements.txt.
+
+## License
+
+The contents of this repository are released under the [GPL v3 license](https://opensource.org/licenses/GPL-3.0). See the [LICENSE](LICENSE) file included for more information.
