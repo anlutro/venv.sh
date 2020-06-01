@@ -14,11 +14,15 @@ source "$HOME/code/venv.sh/venv.sh"
 
 ## Usage
 
-`venv activate` will activate a virtual environment in the current directory. If one is not found, you will be asked if you want to create one.
+`venv activate` will activate a virtual environment in the current directory. If one is not found, you will be asked if you want to create one. You can also use `venv create` to explicitly make one.
 
-`venv destroy` will deactivate and destroy the virtual environment.
+You can use `--noninteractive` to prevent confirm prompts from showing up.
+
+By default, virtual environments will be created with the latest version of Python found in your `$PATH`. You can override this with `-2`, `-3`, or specifying an exact version with `-p` (e.g. `-p3.6` or `-p3.9.0b1`).
 
 By default, the directory name `.venv` will be used. It's recommended that you add this to your (global) gitignore.
+
+`venv destroy` will deactivate and destroy the virtual environment.
 
 You might also want to set up aliases to make these commands more easily accessible:
 
