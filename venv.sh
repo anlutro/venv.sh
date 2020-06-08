@@ -126,11 +126,8 @@ function venv {
             if [ ! -e "$venv/bin/python" ]; then
                 ls --color=yes -l $venv/bin/python*
                 echo "Python binary not found in venv, possibly due to python being upgraded." >&2
-                if ! confirm "Re-create virtualenv?"; then
-                    return 1
-                fi
-                venv-destroy
-                venv-create
+                echo "Try \`venv upgrade\` or re-create the virtualenv from scratch." >&2
+                return 1
             fi
         else
             echo "Couldn't find a virtualenv in PWD!" >&2
@@ -144,9 +141,9 @@ function venv {
         if echo "$relpath" | grep -q '^\.\.'; then
             relpath=$venv
         fi
-        echo -n "Activating virtualenv: $relpath"
-        echo " - $($venv/bin/python --version 2>&1)"
-        echo "Run \`deactivate\` to exit the virtualenv."
+        echo -n "Activating virtualenv: $relpath" >&2
+        echo " - $($venv/bin/python --version 2>&1)" >&2
+        echo "Run \`deactivate\` to exit the virtualenv." >&2
         . $venv/bin/activate
         export VIRTUAL_ENV_NAME="$venv_name"
         _set_ps1
@@ -201,18 +198,19 @@ function venv {
             return 1
         fi
 
-        echo "Creating virtualenv in '$venv' using $($python --version 2>&1) ..."
+        echo "Creating virtualenv in '$venv' using $($python --version 2>&1) ..." >&2
         if ! confirm "Confirm"; then
             return 1
         fi
         $cmd "$venv" || return 1
-        echo "Upgrading pip, setuptools, wheel ..."
+        echo "Upgrading pip, setuptools, wheel ..." >&2
         "$venv/bin/pip" --quiet install --upgrade pip setuptools wheel
 
         venv_pdir=$(dirname $(readlink -f "$venv"))
         if [ -e "$venv_pdir/pyproject.toml" ]; then
-            if grep -qF '[tool.poetry]' "$venv_pdir/pyproject.toml" && ask_default=no confirm "Poetry config detected, install it??"; then
-                echo "Installing poetry ..."
+            if grep -qF '[tool.poetry]' "$venv_pdir/pyproject.toml" \
+               && ask_default=no confirm "Poetry config detected, install it?"; then
+                echo "Installing poetry ..." >&2
                 "$venv/bin/pip" --quiet install --upgrade poetry
             fi
         fi
@@ -224,9 +222,31 @@ function venv {
         done
     }
 
+    function venv-upgrade {
+        if ! venv-locate; then
+            echo "No virtualenv found!" >&2
+            return 0
+        fi
+        venv="$venv_found"
+
+        if ! echo "$python" | grep -q 'python3'; then
+            echo "Can't upgrade Python 2 virtualenvs!" >&2
+            return 1
+        fi
+
+        if [ "$($python --version 2>&1)" = "$($venv/bin/python --version 2>&1)" ]; then
+            echo "$venv is already $($python --version 2>&1)" >&2
+            return 0
+        fi
+
+        echo "Upgrading $venv to $($python --version 2>&1) ..." >&2
+        rm $venv/bin/python*
+        $python -m venv --upgrade $venv
+    }
+
     function venv-destroy {
         if ! venv-locate; then
-            echo "No virtualenv found!"
+            echo "No virtualenv found!" >&2
             return 0
         fi
         venv="$venv_found"
@@ -239,7 +259,7 @@ function venv {
             deactivate
             _set_ps1
         fi
-        echo "Removing $venv ..."
+        echo "Removing $venv ..." >&2
         rm -rf $venv
     }
 
