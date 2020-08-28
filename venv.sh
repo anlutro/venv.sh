@@ -40,7 +40,9 @@ function venv {
         fi
 
         read -rp "$* [$ask_options] "
-        if [[ "$REPLY" =~ ^[Yy] ]] || [ -z "$REPLY" ] && [ "$ask_default" = 'yes' ]; then
+        if [[ "$REPLY" =~ ^[Yy] ]]; then
+            return 0
+        elif [ -z "$REPLY" ] && [ "$ask_default" = 'yes' ]; then
             return 0
         fi
         return 1
