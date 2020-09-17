@@ -69,7 +69,7 @@ function venv {
                 shift
                 python="$1"
                 ;;
-            -p* )
+            -p*|--python* )
                 python="${1:2}"
                 ;;
             -2|--two )
