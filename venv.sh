@@ -149,6 +149,7 @@ function venv {
         echo -n "Activating virtualenv: $relpath" >&2
         echo " - $($venv/bin/python --version 2>&1)" >&2
         echo "Run \`deactivate\` to exit the virtualenv." >&2
+        # shellcheck source=/dev/null
         . $venv/bin/activate
         export VIRTUAL_ENV_NAME="$venv_name"
         # TODO: this is author-specific, can we make it generic?
