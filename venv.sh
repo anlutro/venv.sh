@@ -9,7 +9,7 @@ sourced=0
 if [ -n "$ZSH_EVAL_CONTEXT" ]; then 
   case $ZSH_EVAL_CONTEXT in *:file) sourced=1;; esac
 elif [ -n "$KSH_VERSION" ]; then
-  [ "$(cd $(dirname -- $0) && pwd -P)/$(basename -- $0)" != "$(cd $(dirname -- ${.sh.file}) && pwd -P)/$(basename -- ${.sh.file})" ] && sourced=1
+  [ "$(cd "$(dirname -- $0)" && pwd -P)/$(basename -- $0)" != "$(cd "$(dirname -- "${.sh.file}")" && pwd -P)/$(basename -- ${.sh.file})" ] && sourced=1
 elif [ -n "$BASH_VERSION" ]; then
   (return 0 2>/dev/null) && sourced=1 
 else # All other shells: examine $0 for known shell binary filenames
@@ -149,9 +149,13 @@ function venv {
         echo -n "Activating virtualenv: $relpath" >&2
         echo " - $($venv/bin/python --version 2>&1)" >&2
         echo "Run \`deactivate\` to exit the virtualenv." >&2
+        # shellcheck source=/dev/null
         . $venv/bin/activate
         export VIRTUAL_ENV_NAME="$venv_name"
-        _set_ps1
+        # TODO: this is author-specific, can we make it generic?
+        if [ "$(type -t _set_ps1)" = 'function' ]; then
+            _set_ps1
+        fi
     }
 
     function venv-locate {
@@ -211,7 +215,7 @@ function venv {
         echo "Upgrading pip, setuptools, wheel ..." >&2
         "$venv/bin/pip" --quiet install --upgrade pip setuptools wheel
 
-        venv_pdir=$(dirname $(readlink -f "$venv"))
+        venv_pdir="$(dirname "$(readlink -f "$venv")")"
         if [ -e "$venv_pdir/pyproject.toml" ]; then
             if grep -qF '[tool.poetry]' "$venv_pdir/pyproject.toml" && ask_default=no confirm "Poetry config detected, install it??"; then
                 echo "Installing poetry ..." >&2
@@ -239,7 +243,10 @@ function venv {
 
         if [ -n "$VIRTUAL_ENV" ]; then
             deactivate
-            _set_ps1
+            # TODO: this is author-specific, can we make it generic?
+            if [ "$(type -t _set_ps1)" = 'function' ]; then
+                _set_ps1
+            fi
         fi
         echo "Removing $venv ..." >&2
         rm -rf $venv
