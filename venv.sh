@@ -151,7 +151,10 @@ function venv {
         echo "Run \`deactivate\` to exit the virtualenv." >&2
         . $venv/bin/activate
         export VIRTUAL_ENV_NAME="$venv_name"
-        _set_ps1
+        # TODO: this is author-specific, can we make it generic?
+        if [ "$(type -t _set_ps1)" = 'function' ]; then
+            _set_ps1
+        fi
     }
 
     function venv-locate {
@@ -239,7 +242,10 @@ function venv {
 
         if [ -n "$VIRTUAL_ENV" ]; then
             deactivate
-            _set_ps1
+            # TODO: this is author-specific, can we make it generic?
+            if [ "$(type -t _set_ps1)" = 'function' ]; then
+                _set_ps1
+            fi
         fi
         echo "Removing $venv ..." >&2
         rm -rf $venv
