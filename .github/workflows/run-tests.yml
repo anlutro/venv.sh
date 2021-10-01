@@ -17,13 +17,6 @@ jobs:
       - uses: actions/checkout@v2
       - run: shellcheck -s bash -S warning venv.sh
 
-  test-install:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: bash -x ./install-psm.bash
-      - run: psm help
-
   test:
     runs-on: ubuntu-latest
     steps:
