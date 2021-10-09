@@ -69,8 +69,11 @@ function venv {
                 shift
                 python="$1"
                 ;;
-            -p*|--python* )
+            -p* )
                 python="${1:2}"
+                ;;
+            --python* )
+                python="${1:8}"
                 ;;
             -2|--two )
                 python='python2'
