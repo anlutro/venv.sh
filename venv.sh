@@ -210,7 +210,7 @@ function venv {
             return 1
         fi
 
-        echo "Creating virtualenv in '$venv' using $($python --version 2>&1) ..." >&2
+        echo "Creating virtualenv in '$venv' using $python ($($python --version 2>&1)) ..." >&2
         if ! confirm "Confirm"; then
             return 1
         fi
