@@ -114,6 +114,11 @@ function venv {
             find /usr/local/bin /usr/bin $HOME/.local/bin -regex '.*/python[3-9][0-9.]*' -printf '%f\n' \
             | sort -V | tail -1
         )
+        if [ -z "$python" ]; then
+            echo "Could not find an appropriate Python binary!" >&2
+            echo "Specify one with -p/--python." >&2
+            return 1
+        fi
     elif echo "$python" | grep -qP '^[\d\.]+$'; then
         python="python${python}"
     fi
