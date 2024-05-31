@@ -9,6 +9,7 @@ _venv_sh_sourced=0
 if [ -n "$ZSH_EVAL_CONTEXT" ]; then 
   case $ZSH_EVAL_CONTEXT in *:file) _venv_sh_sourced=1;; esac
 elif [ -n "$KSH_VERSION" ]; then
+  # shellcheck disable=SC2296
   [ "$(cd "$(dirname -- $0)" && pwd -P)/$(basename -- $0)" != "$(cd "$(dirname -- "${.sh.file}")" && pwd -P)/$(basename -- ${.sh.file})" ] && _venv_sh_sourced=1
 elif [ -n "$BASH_VERSION" ]; then
   (return 0 2>/dev/null) && _venv_sh_sourced=1
