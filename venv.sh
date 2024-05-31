@@ -5,22 +5,23 @@
 
 # ensure script is sourced, not invoked
 # https://stackoverflow.com/a/28776166/2490608
-sourced=0
+_venv_sh_sourced=0
 if [ -n "$ZSH_EVAL_CONTEXT" ]; then 
-  case $ZSH_EVAL_CONTEXT in *:file) sourced=1;; esac
+  case $ZSH_EVAL_CONTEXT in *:file) _venv_sh_sourced=1;; esac
 elif [ -n "$KSH_VERSION" ]; then
-  [ "$(cd "$(dirname -- $0)" && pwd -P)/$(basename -- $0)" != "$(cd "$(dirname -- "${.sh.file}")" && pwd -P)/$(basename -- ${.sh.file})" ] && sourced=1
+  [ "$(cd "$(dirname -- $0)" && pwd -P)/$(basename -- $0)" != "$(cd "$(dirname -- "${.sh.file}")" && pwd -P)/$(basename -- ${.sh.file})" ] && _venv_sh_sourced=1
 elif [ -n "$BASH_VERSION" ]; then
-  (return 0 2>/dev/null) && sourced=1 
+  (return 0 2>/dev/null) && _venv_sh_sourced=1
 else # All other shells: examine $0 for known shell binary filenames
   # Detects `sh` and `dash`; add additional shell filenames as needed.
-  case ${0##*/} in sh|dash) sourced=1;; esac
+  case ${0##*/} in sh|dash) _venv_sh_sourced=1;; esac
 fi
 
-if [ $sourced -eq 0 ]; then
+if [ $_venv_sh_sourced -eq 0 ]; then
     echo "$0 must be sourced, not ran as a command!" >&2
     exit 1
 fi
+unset _venv_sh_sourced
 
 function venv {
     function confirm {
