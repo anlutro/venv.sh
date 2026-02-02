@@ -1,5 +1,9 @@
 # venv.sh
 
+> [!IMPORTANT]
+> I'm no longer maintaining this tool, and don't recommend you use it.
+> Do what I do and use [`uv`](https://docs.astral.sh/uv/) instead.
+
 Provides a shell function `venv` for working with modern Python 3.5+ virtual environments.
 
 ## Installation
